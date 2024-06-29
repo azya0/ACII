@@ -2,10 +2,13 @@ import pygame
 import numpy
 import cv2
 
+# Набор из символов, для формирования изображения
 MAIN_CHAR_STRING = ' ixzao№#AMW&8%B@$'
+# Коэффициент расстояния между символами (для каждой фотографии подбирается свой)
+SPACE_BETWEEN_CHARS_COEF = 0.6
 
 
-def get_image_data(image, color=cv2.cv2.COLOR_BGR2GRAY):
+def get_image_data(image, color=cv2.COLOR_BGR2GRAY):
     transposed_image = cv2.transpose(image)
     rgb_format_image = cv2.cvtColor(transposed_image, color)
     return rgb_format_image
@@ -40,11 +43,11 @@ def show_pygame(path, font_size, save_way='', chars=MAIN_CHAR_STRING, ascii=Fals
     pygame.init()
     font = pygame.font.SysFont('Arial', font_size, bold=True)
     coef = 255 // (len(chars) - 2)
-    step = int(font_size * 0.5)
+    step = int(font_size * SPACE_BETWEEN_CHARS_COEF)
     _colors, _color_coef = create_colors()
 
-    def draw_image_pygame():
-        pygame.surfarray.blit_array(surface, image_data)
+    # def draw_image_pygame():
+    #     pygame.surfarray.blit_array(surface, image_data)
 
     def draw_image_pygame_ASCII():
         bw_ides = bw_img // coef
@@ -76,10 +79,13 @@ def show_pygame(path, font_size, save_way='', chars=MAIN_CHAR_STRING, ascii=Fals
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s:
                     screenshot()
-        if not ascii:
-            draw_image_pygame()
-        else:
-            draw_image_pygame_ASCII()
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+        # if not ascii:
+        #     draw_image_pygame()
+        # else:
+        #     draw_image_pygame_ASCII()
+        draw_image_pygame_ASCII()
         pygame.display.flip()
 
 
